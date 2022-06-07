@@ -169,7 +169,7 @@ public class PatientEndpoint {
             if (validateMinimumRequirement((Patient) patient)) {
               status = HttpStatus.OK;
               formattedData = "{ \"resourceType\": \"Bundle\", \"id\": \"" + UUID.randomUUID().toString() + "\", ";
-              formattedData = formattedData + "\"type\": \"searchset\", \"total\": ";
+              formattedData = formattedData + "\"type\": \"searchset\", \"total\":";
               String query = "SELECT * FROM Patient ORDER BY TIMESTAMP DESC";
               String queryResult = App.getDB().runQuery(query, false, false);
               logger.info("******** QueryResult 1= "+queryResult);
@@ -209,8 +209,9 @@ public class PatientEndpoint {
                 //}
                 logger.info("candidate weight: " + candidateWeight); 
               }
-              
-              formattedData = formattedData + matches.size() + ", \"entry\": [";
+              string patientLink=request.getRequestURI()+"/Patient/" +FhirUtils.getIdFromResource(new_patient);
+
+              formattedData = formattedData + matches.size() + "\"link\":" + patientLink + "\"entry\": [";
               for (int i=0; i<matches.size(); i++) {
 				if ( i==0 ) {
 					formattedData = formattedData + FhirUtils.getFormattedData(matches.get(i), requestType);
